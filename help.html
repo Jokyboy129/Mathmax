@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rechner Hilfe</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+        }
+        code {
+            background-color: #eec;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .note {
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            margin-bottom: 15px;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Rechner Handbuch</h1>
+    <p>Willkommen zur Hilfe. Dieser Rechner unterstützt mathematische Ausdrücke, Analysis, Statistik, Vektorrechnung und das Lösen von Gleichungen.</p>
+
+    <div class="note">
+        <strong>Eingabe:</strong> Sie können Dezimalzahlen sowohl mit Punkt (<code>3.14</code>) als auch mit Komma (<code>3,14</code>) eingeben. Bei Funktionen werden Argumente mit <strong>Semikolon (<code>;</code>)</strong> getrennt (z.B. <code>min(1; 5)</code>).
+    </div>
+
+    <h2>Grundrechenarten & Konstanten</h2>
+    <table>
+        <tr>
+            <th>Funktion</th>
+            <th>Eingabebeispiel</th>
+            <th>Beschreibung</th>
+        </tr>
+        <tr>
+            <td>Grundrechnung</td>
+            <td><code>12 + 5 * (3 - 1)</code></td>
+            <td>Klassische Punkt-vor-Strich-Rechnung.</td>
+        </tr>
+        <tr>
+            <td>Potenz</td>
+            <td><code>2^3</code> oder <code>2**3</code></td>
+            <td>Zwei hoch drei.</td>
+        </tr>
+        <tr>
+            <td>Wurzel</td>
+            <td><code>sqrt(16)</code></td>
+            <td>Quadratwurzel.</td>
+        </tr>
+        <tr>
+            <td>n-te Wurzel</td>
+            <td><code>root(27; 3)</code></td>
+            <td>Die 3. Wurzel aus 27. (Syntax: <code>root(Zahl; Grad)</code>)</td>
+        </tr>
+        <tr>
+            <td>Logarithmus</td>
+            <td><code>ln(e)</code>, <code>lg(100)</code>, <code>log(8; 2)</code></td>
+            <td>Natürlicher (ln), 10er (lg) oder Basis-Logarithmus (log(Zahl; Basis)).</td>
+        </tr>
+        <tr>
+            <td>Konstanten</td>
+            <td><code>pi</code>, <code>e</code></td>
+            <td>Kreiszahl Pi und Eulersche Zahl.</td>
+        </tr>
+    </table>
+
+    <h2>Analysis (Differentialrechnung)</h2>
+    <p>Funktionen zur Berechnung von Ableitungen.</p>
+    <table>
+        <tr>
+            <th>Befehl</th>
+            <th>Eingabebeispiel</th>
+            <th>Beschreibung</th>
+        </tr>
+        <tr>
+            <td><code>nderive</code></td>
+            <td><code>nderive(x^2; 2; 1)</code></td>
+            <td>Berechnet den <strong>numerischen Wert</strong> der Ableitung an einer Stelle.<br>Syntax: <code>nderive(Funktion; Position; Grad)</code>.<br>Beispiel: 1. Ableitung von x² an der Stelle x=2 ist 4.</td>
+        </tr>
+        <tr>
+            <td><code>algs</code></td>
+            <td><code>algs(3x^3; 1)</code></td>
+            <td>Gibt die <strong>Ableitungsfunktion</strong> symbolisch zurück.<br>Syntax: <code>algs(Funktion; Grad)</code>.<br>Beispiel: 1. Ableitung von 3x³ ist 9x².</td>
+        </tr>
+    </table>
+
+    <h2>Trigonometrie</h2>
+    <p>Das Winkelmaß (Grad oder Bogenmaß) kann in den <strong>Einstellungen</strong> geändert werden.</p>
+    <table>
+        <tr>
+            <th>Befehl</th>
+            <th>Beschreibung</th>
+        </tr>
+        <tr>
+            <td><code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code></td>
+            <td>Sinus, Kosinus, Tangens.</td>
+        </tr>
+        <tr>
+            <td><code>asin(x)</code>, <code>acos(x)</code>, <code>atan(x)</code></td>
+            <td>Arcussinus, Arcuskosinus, Arcustangens.</td>
+        </tr>
+    </table>
+    
+    <hr>
+    
+    <h2>📊 Statistikfunktionen</h2>
+    <p>Alle statistischen Funktionen können sowohl einzelne Zahlen als auch Vektoren verarbeiten.</p>
+    <table>
+        <tr>
+            <th>Befehl</th>
+            <th>Eingabebeispiel</th>
+            <th>Beschreibung</th>
+        </tr>
+        <tr>
+            <td><code>min</code></td>
+            <td><code>min(4; 1; 8)</code></td>
+            <td>Gibt den kleinsten Wert zurück.</td>
+        </tr>
+        <tr>
+            <td><code>max</code></td>
+            <td><code>max(4; 1; 8)</code></td>
+            <td>Gibt den größten Wert zurück.</td>
+        </tr>
+        <tr>
+            <td><code>mittel</code></td>
+            <td><code>mittel(1; 5; 9)</code></td>
+            <td>Berechnet das <strong>arithmetische Mittel</strong> (Durchschnitt).</td>
+        </tr>
+        <tr>
+            <td><code>sd</code></td>
+            <td><code>sd(3; 6; 8; 12)</code></td>
+            <td>Berechnet die <strong>Standardabweichung</strong> (Grundgesamtheit).</td>
+        </tr>
+        <tr>
+            <td><code>x!</code></td>
+            <td><code>3!</code></td>
+            <td>Berechnet die FakultÃ¤t einer nichtnegativen ganzen Zahl.</td>
+        </tr>
+        <tr>
+            <td><code>binco</code></td>
+            <td><code>binco(5; 2)</code></td>
+            <td>Berechnet den Binomialkoeffizienten <code>n Ã¼ber k</code>.</td>
+        </tr>
+        <tr>
+            <td><code>binom</code></td>
+            <td><code>binom(5; 0,5; 2)</code></td>
+            <td>Berechnet die Binomialverteilung <code>P(X = k)</code> mit <code>n</code> Versuchen und Trefferwahrscheinlichkeit <code>p</code>.</td>
+        </tr>
+        <tr>
+            <td><code>cbinom</code></td>
+            <td><code>cbinom(5; 0,5; 2)</code></td>
+            <td>Berechnet die kumulative Binomialverteilung <code>P(X &lt;= k)</code>.</td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <h2>Vektorrechnung</h2>
+    <p>Vektoren werden in eckigen Klammern geschrieben und mit Strichpunkt getrennt: <code>[x; y; z]</code>.</p>
+    <table>
+        <tr>
+            <td>Definition</td>
+            <td><code>[1; 2; 3]</code></td>
+            <td>Erstellt einen Vektor.</td>
+        </tr>
+        <tr>
+            <td>Skalarprodukt</td>
+            <td><code>dot([1; 0]; [0; 1])</code> oder <code>[1;0] * [0;1]</code></td>
+            <td>Berechnet das Skalarprodukt (Zahl).</td>
+        </tr>
+        <tr>
+            <td>Kreuzprodukt</td>
+            <td><code>cross([1;0;0]; [0;1;0])</code></td>
+            <td>Berechnet das Kreuzprodukt (nur 3D).</td>
+        </tr>
+        <tr>
+            <td>Länge (Betrag)</td>
+            <td><code>len([3; 4])</code></td>
+            <td>Berechnet die Länge des Vektors.</td>
+        </tr>
+    </table>
+
+    <h2>Gleichungslöser</h2>
+    
+    <h3>Lösen von Gleichungen (nsolve)</h3>
+    <p>Findet exakte oder numerische Lösungen für eine Variable. Findet auch mehrere Lösungen (z. B. bei quadratischen Gleichungen).</p>
+    <p><strong>Syntax:</strong> <code>nsolve(Gleichung)</code></p>
+    <ul>
+        <li><code>nsolve(x^2 - 4 = 0)</code> &rarr; Findet alle Lösungen für x.</li>
+        <li><code>nsolve(x^2 = 4)</code> &rarr; Alternativschreibweise.</li>
+    </ul>
+
+    <h3>Lineare Gleichungssysteme (lsolve)</h3>
+    <p>Löst ein System aus linearen Gleichungen exakt. Trennen Sie Gleichungen mit einem Strichpunkt.</p>
+    <p><strong>Syntax:</strong> <code>lsolve(Gl1; Gl2; ...)</code></p>
+    <ul>
+        <li>Beispiel: <code>lsolve(x + y = 5; x - y = 1)</code></li>
+    </ul>
+
+</body>
+</html>
