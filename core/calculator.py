@@ -10,6 +10,7 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg'):
     global USER_DEFINITIONS
     
     ausdruck = ausdruck.strip()
+    sympy_locals = {'e': sp.E, 'pi': sp.pi, 'exp': sp.exp}
     
     # -----------------------------
     # Hilfsfunktion: Formatierung des Ergebnisses
@@ -246,15 +247,15 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg'):
                 var_match = re.search(r'\((.+)\)', lhs)
                 if var_match:
                     var_symbol = sp.Symbol(var_match.group(1))
-                expression = sp.sympify(rhs.replace('^', '**'))
+                expression = sp.sympify(rhs.replace('^', '**'), locals=sympy_locals)
             else:
-                expression = sp.sympify(func_def.replace('^', '**'))
+                expression = sp.sympify(func_def.replace('^', '**'), locals=sympy_locals)
                 free_syms = sorted(list(expression.free_symbols), key=lambda s: s.name)
                 if free_syms: var_symbol = free_syms[0]
 
             if mode == 'value':
                 if len(parts) < 3: return "'Fehler: Benötigt (Funktion; Stelle; Grad)'"
-                pos_val = float(sp.sympify(parts[1]).evalf())
+                pos_val = float(sp.sympify(parts[1], locals=sympy_locals).evalf())
                 order = int(parts[2])
                 res = sp.diff(expression, var_symbol, order).subs(var_symbol, pos_val)
                 return str(float(res.evalf()))
@@ -394,13 +395,11 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg'):
     # -----------------------------
     def nsolve(equation_str, *args):
         try:
-            local_env = {'e': sp.E, 'pi': sp.pi, 'exp': sp.exp}
-
             if '=' in equation_str:
                 left, right = equation_str.split('=')
-                eq = sp.Eq(sp.sympify(left, locals=local_env), sp.sympify(right, locals=local_env))
+                eq = sp.Eq(sp.sympify(left, locals=sympy_locals), sp.sympify(right, locals=sympy_locals))
             else:
-                eq = sp.sympify(equation_str, locals=local_env)
+                eq = sp.sympify(equation_str, locals=sympy_locals)
 
             free_symbols = eq.free_symbols
             if not free_symbols: return "Keine Variable gefunden"
@@ -465,13 +464,11 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg'):
             eqs_list = [e.strip() for e in eqs_str.split(';')]
             eqs_sympy = []
             vars_set = set()
-            local_env = {'e': sp.E, 'pi': sp.pi}
-            
             for eq_txt in eqs_list:
                 if '=' not in eq_txt: continue
                 l, r = eq_txt.split('=')
-                l_ex = sp.sympify(l, locals=local_env)
-                r_ex = sp.sympify(r, locals=local_env)
+                l_ex = sp.sympify(l, locals=sympy_locals)
+                r_ex = sp.sympify(r, locals=sympy_locals)
                 eqs_sympy.append(sp.Eq(l_ex, r_ex))
                 vars_set.update(l_ex.free_symbols | r_ex.free_symbols)
             
