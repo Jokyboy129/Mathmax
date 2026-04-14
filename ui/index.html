@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="UTF-8">
+	<title>Mathmax Web - Rechner</title>
+	<link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+	<script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+	
+	<style>
+		/* Kontrastreiches und klares Design für bessere Zugänglichkeit */
+		body { 
+			font-family: Arial, Helvetica, sans-serif; 
+			background: #ffffff; 
+			color: #000000;
+			display: flex;
+			justify-content: center;
+			padding-top: 2rem;
+			line-height: 1.5;
+		}
+		main { 
+			background: #ffffff; 
+			padding: 2rem; 
+			border: 2px solid #000000;
+			border-radius: 8px; 
+			width: 100%;
+			max-width: 600px;
+		}
+		h1 {
+			margin-top: 0;
+			font-size: 1.5rem;
+			border-bottom: 2px solid #000000;
+			padding-bottom: 0.5rem;
+		}
+		label {
+			display: block;
+			font-weight: bold;
+			margin-top: 1rem;
+		}
+		input[type="text"], select { 
+			width: 100%; 
+			padding: 0.75rem; 
+			margin: 0.5rem 0 1rem 0; 
+			border: 2px solid #000000; 
+			border-radius: 4px; 
+			box-sizing: border-box; 
+			font-size: 1.1rem; 
+		}
+		/* Deutliche visuelle Hervorhebung beim Navigieren mit der Tastatur */
+		input[type="text"]:focus, select:focus, details:focus-within summary {
+			outline: 3px solid #005fcc;
+			outline-offset: 2px;
+		}
+		input[type="text"][readonly] {
+			background: #f0f0f0;
+			border-style: dashed;
+		}
+		details {
+			margin-bottom: 1rem;
+			border: 1px solid #000000;
+			padding: 0.5rem;
+			border-radius: 4px;
+		}
+		summary {
+			font-weight: bold;
+			cursor: pointer;
+			padding: 0.5rem;
+		}
+		#loading { 
+			font-weight: bold; 
+			text-align: center;
+			padding: 2rem 0;
+			font-size: 1.2rem;
+		}
+		.sr-only {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			border: 0;
+		}
+	</style>
+
+	<py-config type="json">
+	{
+		"packages": ["sympy", "mpmath"],
+		"fetch": [{
+			"from": "../core",
+			"to_folder": "core",
+			"files": ["calculator.py"]
+		}]
+	}
+	</py-config>
+</head>
+<body>
+	<main>
+		<h1>Mathmax Web</h1>
+		
+		<div id="loading" aria-live="polite">
+			Lade Mathematik-Modul, bitte warten...
+		</div>
+		
+		<div id="app-content" style="display:none;">
+			
+			<details id="settings-section">
+				<summary>Einstellungen</summary>
+				<div>
+					<label for="decimals">Dezimalstellen:</label>
+					<select id="decimals">
+						<option value="5">5</option>
+						<option value="10" selected>10</option>
+						<option value="15">15</option>
+						<option value="20">20</option>
+					</select>
+					
+					<label for="angle_mode">Winkelmaß:</label>
+					<select id="angle_mode">
+						<option value="deg" selected>Gradmaß (Deg)</option>
+						<option value="rad">Bogenmaß (Rad)</option>
+					</select>
+				</div>
+			</details>
+
+			<details id="help-section">
+				<summary>Hilfe</summary>
+				<div>
+					<p>Geben Sie Ihren mathematischen Ausdruck in das Eingabefeld ein und drücken Sie die Eingabetaste (Enter).</p>
+					<ul>
+						<li>Grundrechenarten: +, -, *, /</li>
+						<li>Gleichungen lösen: nsolve(x^2 - 4 = 0)</li>
+						<li>Gleichungssysteme lösen: lsolve(x + y = 10; x - y = 2)</li>
+						<li>Funktionen definieren: def f(x): x^2 + 2</li>
+					</ul>
+				</div>
+			</details>
+			
+			<section aria-labelledby="calc-heading">
+				<h2 id="calc-heading" class="sr-only">Berechnung</h2>
+				
+				<label for="calc-input">Eingabe (Mit Enter bestätigen):</label>
+				<input type="text" id="calc-input" autocomplete="off">
+				
+				<label for="calc-output">Ergebnis:</label>
+				<input type="text" id="calc-output" readonly aria-live="polite">
+			</section>
+		</div>
+	</main>
+
+	<script type="py">
+		import traceback
+		from pyscript import document
+		from pyodide.ffi import create_proxy
+
+		try:
+			import core.calculator as calc
+			
+			document.getElementById("loading").style.display = "none"
+			document.getElementById("app-content").style.display = "block"
+			
+			input_el = document.getElementById("calc-input")
+			output_el = document.getElementById("calc-output")
+			dec_el = document.getElementById("decimals")
+			ang_el = document.getElementById("angle_mode")
+
+			def calculate(e):
+				if e.key == "Enter":
+					ausdruck = input_el.value
+					decimals = int(dec_el.value)
+					angle_mode = ang_el.value
+					
+					if not ausdruck.strip():
+						return
+						
+					try:
+						ergebnis = calc.evaluiere(ausdruck, decimals=decimals, angle_mode=angle_mode)
+						output_el.value = str(ergebnis)
+					except Exception as ex:
+						output_el.value = f"Fehler: {ex}"
+					
+					# Fokus setzen und Inhalt markieren
+					output_el.focus()
+					output_el.select()
+						
+			input_el.addEventListener("keydown", create_proxy(calculate))
+			
+			input_el.focus()
+			
+		except Exception as e:
+			err_msg = f"Fehler beim Laden:\n{traceback.format_exc()}"
+			document.getElementById("loading").innerText = err_msg
+	</script>
+</body>
+</html>
