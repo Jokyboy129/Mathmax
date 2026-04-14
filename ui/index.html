@@ -132,6 +132,7 @@
 						<li>Gleichungen lösen: nsolve(x^2 - 4 = 0)</li>
 						<li>Gleichungssysteme lösen: lsolve(x + y = 10; x - y = 2)</li>
 						<li>Funktionen definieren: def f(x): x^2 + 2</li>
+						<li>Funktionen anzeigen: showdef</li>
 					</ul>
 				</div>
 			</details>
@@ -150,7 +151,8 @@
 
 	<script type="py">
 		import traceback
-		from pyscript import document
+		import json
+		from pyscript import document, window
 		from pyodide.ffi import create_proxy
 
 		try:
@@ -164,6 +166,35 @@
 			dec_el = document.getElementById("decimals")
 			ang_el = document.getElementById("angle_mode")
 
+			# --- 1. DATEN LADEN ---
+			saved_settings = window.localStorage.getItem("mathmax_settings")
+			if saved_settings:
+				try:
+					settings = json.loads(saved_settings)
+					dec_el.value = settings.get("decimals", "10")
+					ang_el.value = settings.get("angle_mode", "deg")
+				except:
+					pass
+
+			saved_defs = window.localStorage.getItem("mathmax_defs")
+			if saved_defs:
+				try:
+					calc.USER_DEFINITIONS.update(json.loads(saved_defs))
+				except:
+					pass
+
+			# --- 2. DATEN SPEICHERN ---
+			def save_state(*args):
+				settings = {"decimals": dec_el.value, "angle_mode": ang_el.value}
+				window.localStorage.setItem("mathmax_settings", json.dumps(settings))
+				window.localStorage.setItem("mathmax_defs", json.dumps(calc.USER_DEFINITIONS))
+
+			# Event Listener für Dropdowns (Speichern bei Klick)
+			proxy_save = create_proxy(save_state)
+			dec_el.addEventListener("change", proxy_save)
+			ang_el.addEventListener("change", proxy_save)
+
+			# --- 3. BERECHNUNG ---
 			def calculate(e):
 				if e.key == "Enter":
 					ausdruck = input_el.value
@@ -176,6 +207,11 @@
 					try:
 						ergebnis = calc.evaluiere(ausdruck, decimals=decimals, angle_mode=angle_mode)
 						output_el.value = str(ergebnis)
+						
+						# Wenn eine Funktion definiert oder gelöscht wurde -> Speichern
+						if ausdruck.startswith("def ") or ausdruck.startswith("deldef"):
+							save_state()
+							
 					except Exception as ex:
 						output_el.value = f"Fehler: {ex}"
 					
