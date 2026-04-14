@@ -1,89 +1,96 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mathmax</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Mathmax</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 40px auto;
-      line-height: 1.6;
-      padding: 0 16px;
-    }
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			max-width: 800px;
+			margin: 40px auto;
+			line-height: 1.6;
+			padding: 0 16px;
+		}
 
-    h1 {
-      font-size: 2em;
-    }
+		h1 {
+			font-size: 2em;
+		}
 
-    .box {
-      padding: 16px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin-top: 20px;
-    }
+		.box {
+			padding: 16px;
+			border: 1px solid #ccc;
+			border-radius: 10px;
+			margin-top: 20px;
+		}
 
-    a {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 14px;
-      background: #007acc;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-    }
+		a {
+			display: inline-block;
+			margin-top: 10px;
+			margin-right: 10px;
+			padding: 10px 14px;
+			background: #007acc;
+			color: white;
+			text-decoration: none;
+			border-radius: 6px;
+		}
 
-    a:hover {
-      background: #005fa3;
-    }
-  </style>
+		a:hover {
+			background: #005fa3;
+		}
+	</style>
 </head>
 
 <body>
 
-  <h1 id="title">Mathmax</h1>
+	<h1 id="title">Mathmax</h1>
 
-  <div class="box" id="content"></div>
+	<div class="box" id="content"></div>
 
-  <script>
-    const lang = navigator.language || navigator.userLanguage;
+	<script>
+		const lang = navigator.language || navigator.userLanguage;
 
-    const isGerman = lang.startsWith("de");
+		const isGerman = lang.startsWith("de");
 
-    const content = document.getElementById("content");
+		const content = document.getElementById("content");
 
-    if (isGerman) {
-      document.getElementById("title").textContent = "Mathmax";
+		if (isGerman) {
+			document.getElementById("title").textContent = "Mathmax";
 
-      content.innerHTML = `
-        <p><strong>Mathmax</strong> ist ein Windows-Rechner für blinde und sehbehinderte Menschen.</p>
-        <p>Er bietet sowohl grundlegende Rechenfunktionen als auch wissenschaftliche Funktionen.</p>
-        <p>Die Bedienung ist auf Screenreader wie NVDA optimiert.</p>
+			content.innerHTML = `
+				<p><strong>Mathmax</strong> ist ein Windows-Rechner für blinde und sehbehinderte Menschen.</p>
+				<p>Er bietet sowohl grundlegende Rechenfunktionen als auch wissenschaftliche Funktionen.</p>
+				<p>Die Bedienung ist auf Screenreader wie NVDA optimiert.</p>
 
-        <p>Dies ist eine frühe Rohversion der Projektseite.</p>
+				<p>Dies ist eine frühe Rohversion der Projektseite.</p>
 
-        <a href="https://github.com/Jokyboy129/Mathmax/releases" target="_blank">
-          Download (Releases)
-        </a>
-      `;
-    } else {
-      document.getElementById("title").textContent = "Mathmax";
+				<a href="https://github.com/Jokyboy129/Mathmax/releases" target="_blank">
+					Download (Releases)
+				</a>
+				<a href="https://jokyboy129.github.io/jokyboy129/Mathmax/ui/index.html" target="_blank">
+					Web-App öffnen
+				</a>
+			`;
+		} else {
+			document.getElementById("title").textContent = "Mathmax";
 
-      content.innerHTML = `
-        <p><strong>Mathmax</strong> is a Windows calculator for blind and visually impaired users.</p>
-        <p>It includes basic math functions as well as scientific calculations.</p>
-        <p>The app is optimized for screen readers like NVDA.</p>
+			content.innerHTML = `
+				<p><strong>Mathmax</strong> is a Windows calculator for blind and visually impaired users.</p>
+				<p>It includes basic math functions as well as scientific calculations.</p>
+				<p>The app is optimized for screen readers like NVDA.</p>
 
-        <p>This is an early draft of the project website.</p>
+				<p>This is an early draft of the project website.</p>
 
-        <a href="https://github.com/Jokyboy129/Mathmax/releases" target="_blank">
-          Download (Releases)
-        </a>
-      `;
-    }
-  </script>
+				<a href="https://github.com/Jokyboy129/Mathmax/releases" target="_blank">
+					Download (Releases)
+				</a>
+				<a href="https://jokyboy129.github.io/jokyboy129/Mathmax/ui/index.html" target="_blank">
+					Open Web-App
+				</a>
+			`;
+		}
+	</script>
 
 </body>
 </html>
