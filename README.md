@@ -8,9 +8,9 @@ Mathmax is a calculator application for Windows designed specifically for blind 
 
 ## Get Started
 - Download the latest version:  
-  https://github.com/jokyboy129/Mathmax/releases
+  (https://github.com/jokyboy129/Mathmax/releases)
 - Try the web version:  
-  https://github.com/jokyboy129/Mathmax/ui/index.html
+  [Here](https://jokyboy129.github.io/Mathmax/ui)
 
 ## Features
 
