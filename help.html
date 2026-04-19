@@ -1,242 +1,490 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rechner Hilfe</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        h1 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-        }
-        h2 {
-            color: #2980b9;
-            margin-top: 30px;
-        }
-        code {
-            background-color: #eec;
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-weight: bold;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #3498db;
-            color: white;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        .note {
-            background-color: #e7f3fe;
-            border-left: 6px solid #2196F3;
-            margin-bottom: 15px;
-            padding: 15px;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mathmax Help / Hilfe</title>
+	<style>
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			line-height: 1.6;
+			color: #333;
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+			background-color: #f9f9f9;
+		}
+		.lang-switcher {
+			text-align: right;
+			margin-bottom: 20px;
+			background: #fff;
+			padding: 10px;
+			border-radius: 5px;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+		}
+		.lang-switcher select {
+			padding: 5px 10px;
+			font-size: 16px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+		h1 {
+			color: #2c3e50;
+			border-bottom: 2px solid #3498db;
+			padding-bottom: 10px;
+		}
+		h2 {
+			color: #2980b9;
+			margin-top: 30px;
+		}
+		code {
+			background-color: #eec;
+			padding: 2px 5px;
+			border-radius: 4px;
+			font-family: 'Consolas', 'Monaco', monospace;
+			font-weight: bold;
+		}
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 10px;
+			background-color: white;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+		}
+		th, td {
+			padding: 12px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+		th {
+			background-color: #3498db;
+			color: white;
+		}
+		tr:hover {
+			background-color: #f1f1f1;
+		}
+		.note {
+			background-color: #e7f3fe;
+			border-left: 6px solid #2196F3;
+			margin-bottom: 15px;
+			padding: 15px;
+		}
+		/* Verstecke Sprachen standardmäßig */
+		.lang-content {
+			display: none;
+		}
+		/* Aktive Sprache anzeigen */
+		.lang-content.active {
+			display: block;
+		}
+	</style>
 </head>
 <body>
 
-    <h1>Rechner Handbuch</h1>
-    <p>Willkommen zur Hilfe. Dieser Rechner unterstützt mathematische Ausdrücke, Analysis, Statistik, Vektorrechnung und das Lösen von Gleichungen.</p>
+	<div class="lang-switcher">
+		<label for="lang-select">🌐 Language / Sprache: </label>
+		<select id="lang-select" onchange="switchLang(this.value)">
+			<option value="en">English</option>
+			<option value="de">Deutsch</option>
+		</select>
+	</div>
 
-    <div class="note">
-        <strong>Eingabe:</strong> Sie können Dezimalzahlen sowohl mit Punkt (<code>3.14</code>) als auch mit Komma (<code>3,14</code>) eingeben. Bei Funktionen werden Argumente mit <strong>Semikolon (<code>;</code>)</strong> getrennt (z.B. <code>min(1; 5)</code>).
-    </div>
+	<div id="content-de" class="lang-content">
+		<h1>Rechner Handbuch</h1>
+		<p>Willkommen zur Hilfe. Dieser Rechner unterstützt mathematische Ausdrücke, Analysis, Statistik, Vektorrechnung und das Lösen von Gleichungen.</p>
 
-    <h2>Grundrechenarten & Konstanten</h2>
-    <table>
-        <tr>
-            <th>Funktion</th>
-            <th>Eingabebeispiel</th>
-            <th>Beschreibung</th>
-        </tr>
-        <tr>
-            <td>Grundrechnung</td>
-            <td><code>12 + 5 * (3 - 1)</code></td>
-            <td>Klassische Punkt-vor-Strich-Rechnung.</td>
-        </tr>
-        <tr>
-            <td>Potenz</td>
-            <td><code>2^3</code> oder <code>2**3</code></td>
-            <td>Zwei hoch drei.</td>
-        </tr>
-        <tr>
-            <td>Wurzel</td>
-            <td><code>sqrt(16)</code></td>
-            <td>Quadratwurzel.</td>
-        </tr>
-        <tr>
-            <td>n-te Wurzel</td>
-            <td><code>root(27; 3)</code></td>
-            <td>Die 3. Wurzel aus 27. (Syntax: <code>root(Zahl; Grad)</code>)</td>
-        </tr>
-        <tr>
-            <td>Logarithmus</td>
-            <td><code>ln(e)</code>, <code>lg(100)</code>, <code>log(8; 2)</code></td>
-            <td>Natürlicher (ln), 10er (lg) oder Basis-Logarithmus (log(Zahl; Basis)).</td>
-        </tr>
-        <tr>
-            <td>Konstanten</td>
-            <td><code>pi</code>, <code>e</code></td>
-            <td>Kreiszahl Pi und Eulersche Zahl.</td>
-        </tr>
-    </table>
+		<div class="note">
+			<strong>Eingabe:</strong> Sie können Dezimalzahlen sowohl mit Punkt (<code>3.14</code>) als auch mit Komma (<code>3,14</code>) eingeben. Bei Funktionen werden Argumente mit <strong>Semikolon (<code>;</code>)</strong> getrennt (z.B. <code>min(1; 5)</code>).
+		</div>
 
-    <h2>Analysis (Differentialrechnung)</h2>
-    <p>Funktionen zur Berechnung von Ableitungen.</p>
-    <table>
-        <tr>
-            <th>Befehl</th>
-            <th>Eingabebeispiel</th>
-            <th>Beschreibung</th>
-        </tr>
-        <tr>
-            <td><code>nderive</code></td>
-            <td><code>nderive(x^2; 2; 1)</code></td>
-            <td>Berechnet den <strong>numerischen Wert</strong> der Ableitung an einer Stelle.<br>Syntax: <code>nderive(Funktion; Position; Grad)</code>.<br>Beispiel: 1. Ableitung von x² an der Stelle x=2 ist 4.</td>
-        </tr>
-        <tr>
-            <td><code>algs</code></td>
-            <td><code>algs(3x^3; 1)</code></td>
-            <td>Gibt die <strong>Ableitungsfunktion</strong> symbolisch zurück.<br>Syntax: <code>algs(Funktion; Grad)</code>.<br>Beispiel: 1. Ableitung von 3x³ ist 9x².</td>
-        </tr>
-    </table>
+		<h2>Grundrechenarten & Konstanten</h2>
+		<table>
+			<tr>
+				<th>Funktion</th>
+				<th>Eingabebeispiel</th>
+				<th>Beschreibung</th>
+			</tr>
+			<tr>
+				<td>Grundrechnung</td>
+				<td><code>12 + 5 * (3 - 1)</code></td>
+				<td>Klassische Punkt-vor-Strich-Rechnung.</td>
+			</tr>
+			<tr>
+				<td>Potenz</td>
+				<td><code>2^3</code> oder <code>2**3</code></td>
+				<td>Zwei hoch drei.</td>
+			</tr>
+			<tr>
+				<td>Wurzel</td>
+				<td><code>sqrt(16)</code></td>
+				<td>Quadratwurzel.</td>
+			</tr>
+			<tr>
+				<td>n-te Wurzel</td>
+				<td><code>root(27; 3)</code></td>
+				<td>Die 3. Wurzel aus 27. (Syntax: <code>root(Zahl; Grad)</code>)</td>
+			</tr>
+			<tr>
+				<td>Logarithmus</td>
+				<td><code>ln(e)</code>, <code>lg(100)</code>, <code>log(8; 2)</code></td>
+				<td>Natürlicher (ln), 10er (lg) oder Basis-Logarithmus (log(Zahl; Basis)).</td>
+			</tr>
+			<tr>
+				<td>Konstanten</td>
+				<td><code>pi</code>, <code>e</code></td>
+				<td>Kreiszahl Pi und Eulersche Zahl.</td>
+			</tr>
+		</table>
 
-    <h2>Trigonometrie</h2>
-    <p>Das Winkelmaß (Grad oder Bogenmaß) kann in den <strong>Einstellungen</strong> geändert werden.</p>
-    <table>
-        <tr>
-            <th>Befehl</th>
-            <th>Beschreibung</th>
-        </tr>
-        <tr>
-            <td><code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code></td>
-            <td>Sinus, Kosinus, Tangens.</td>
-        </tr>
-        <tr>
-            <td><code>asin(x)</code>, <code>acos(x)</code>, <code>atan(x)</code></td>
-            <td>Arcussinus, Arcuskosinus, Arcustangens.</td>
-        </tr>
-    </table>
-    
-    <hr>
-    
-    <h2>📊 Statistikfunktionen</h2>
-    <p>Alle statistischen Funktionen können sowohl einzelne Zahlen als auch Vektoren verarbeiten.</p>
-    <table>
-        <tr>
-            <th>Befehl</th>
-            <th>Eingabebeispiel</th>
-            <th>Beschreibung</th>
-        </tr>
-        <tr>
-            <td><code>min</code></td>
-            <td><code>min(4; 1; 8)</code></td>
-            <td>Gibt den kleinsten Wert zurück.</td>
-        </tr>
-        <tr>
-            <td><code>max</code></td>
-            <td><code>max(4; 1; 8)</code></td>
-            <td>Gibt den größten Wert zurück.</td>
-        </tr>
-        <tr>
-            <td><code>mittel</code></td>
-            <td><code>mittel(1; 5; 9)</code></td>
-            <td>Berechnet das <strong>arithmetische Mittel</strong> (Durchschnitt).</td>
-        </tr>
-        <tr>
-            <td><code>sd</code></td>
-            <td><code>sd(3; 6; 8; 12)</code></td>
-            <td>Berechnet die <strong>Standardabweichung</strong> (Grundgesamtheit).</td>
-        </tr>
-        <tr>
-            <td><code>x!</code></td>
-            <td><code>3!</code></td>
-            <td>Berechnet die FakultÃ¤t einer nichtnegativen ganzen Zahl.</td>
-        </tr>
-        <tr>
-            <td><code>binco</code></td>
-            <td><code>binco(5; 2)</code></td>
-            <td>Berechnet den Binomialkoeffizienten <code>n Ã¼ber k</code>.</td>
-        </tr>
-        <tr>
-            <td><code>binom</code></td>
-            <td><code>binom(5; 0,5; 2)</code></td>
-            <td>Berechnet die Binomialverteilung <code>P(X = k)</code> mit <code>n</code> Versuchen und Trefferwahrscheinlichkeit <code>p</code>.</td>
-        </tr>
-        <tr>
-            <td><code>cbinom</code></td>
-            <td><code>cbinom(5; 0,5; 2)</code></td>
-            <td>Berechnet die kumulative Binomialverteilung <code>P(X &lt;= k)</code>.</td>
-        </tr>
-    </table>
+		<h2>Analysis (Differentialrechnung)</h2>
+		<p>Funktionen zur Berechnung von Ableitungen.</p>
+		<table>
+			<tr>
+				<th>Befehl</th>
+				<th>Eingabebeispiel</th>
+				<th>Beschreibung</th>
+			</tr>
+			<tr>
+				<td><code>nderive</code></td>
+				<td><code>nderive(x^2; 2; 1)</code></td>
+				<td>Berechnet den <strong>numerischen Wert</strong> der Ableitung an einer Stelle.<br>Syntax: <code>nderive(Funktion; Position; Grad)</code>.<br>Beispiel: 1. Ableitung von x² an der Stelle x=2 ist 4.</td>
+			</tr>
+			<tr>
+				<td><code>algs</code></td>
+				<td><code>algs(3x^3; 1)</code></td>
+				<td>Gibt die <strong>Ableitungsfunktion</strong> symbolisch zurück.<br>Syntax: <code>algs(Funktion; Grad)</code>.<br>Beispiel: 1. Ableitung von 3x³ ist 9x².</td>
+			</tr>
+		</table>
 
-    <hr>
+		<h2>Trigonometrie</h2>
+		<p>Das Winkelmaß (Grad oder Bogenmaß) kann in den <strong>Einstellungen</strong> geändert werden.</p>
+		<table>
+			<tr>
+				<th>Befehl</th>
+				<th>Beschreibung</th>
+			</tr>
+			<tr>
+				<td><code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code></td>
+				<td>Sinus, Kosinus, Tangens.</td>
+			</tr>
+			<tr>
+				<td><code>asin(x)</code>, <code>acos(x)</code>, <code>atan(x)</code></td>
+				<td>Arcussinus, Arcuskosinus, Arcustangens.</td>
+			</tr>
+			<tr>
+				<td><code>sinh(x)</code>, <code>cosh(x)</code>, <code>tanh(x)</code></td>
+				<td>Hyperbolische Funktionen.</td>
+			</tr>
+		</table>
+		
+		<hr>
+		
+		<h2>📊 Statistik & Kombinatorik</h2>
+		<p>Alle statistischen Funktionen können sowohl einzelne Zahlen als auch Vektoren verarbeiten.</p>
+		<table>
+			<tr>
+				<th>Befehl</th>
+				<th>Eingabebeispiel</th>
+				<th>Beschreibung</th>
+			</tr>
+			<tr>
+				<td><code>min</code> / <code>max</code></td>
+				<td><code>min(4; 1; 8)</code></td>
+				<td>Gibt den kleinsten oder größten Wert zurück.</td>
+			</tr>
+			<tr>
+				<td><code>mittel</code></td>
+				<td><code>mittel(1; 5; 9)</code></td>
+				<td>Berechnet das <strong>arithmetische Mittel</strong> (Durchschnitt).</td>
+			</tr>
+			<tr>
+				<td><code>sd</code></td>
+				<td><code>sd(3; 6; 8; 12)</code></td>
+				<td>Berechnet die <strong>Standardabweichung</strong> (Grundgesamtheit).</td>
+			</tr>
+			<tr>
+				<td><code>x!</code></td>
+				<td><code>3!</code></td>
+				<td>Berechnet die Fakultät einer nichtnegativen ganzen Zahl.</td>
+			</tr>
+			<tr>
+				<td><code>binco</code></td>
+				<td><code>binco(5; 2)</code></td>
+				<td>Berechnet den Binomialkoeffizienten <code>n über k</code>.</td>
+			</tr>
+			<tr>
+				<td><code>binom</code></td>
+				<td><code>binom(5; 0,5; 2)</code></td>
+				<td>Berechnet die Binomialverteilung <code>P(X = k)</code> mit <code>n</code> Versuchen und Wahrscheinlichkeit <code>p</code>.</td>
+			</tr>
+			<tr>
+				<td><code>cbinom</code></td>
+				<td><code>cbinom(5; 0,5; 2)</code></td>
+				<td>Berechnet die kumulative Binomialverteilung <code>P(X &lt;= k)</code>.</td>
+			</tr>
+		</table>
 
-    <h2>Vektorrechnung</h2>
-    <p>Vektoren werden in eckigen Klammern geschrieben und mit Strichpunkt getrennt: <code>[x; y; z]</code>.</p>
-    <table>
-        <tr>
-            <td>Definition</td>
-            <td><code>[1; 2; 3]</code></td>
-            <td>Erstellt einen Vektor.</td>
-        </tr>
-        <tr>
-            <td>Skalarprodukt</td>
-            <td><code>dot([1; 0]; [0; 1])</code> oder <code>[1;0] * [0;1]</code></td>
-            <td>Berechnet das Skalarprodukt (Zahl).</td>
-        </tr>
-        <tr>
-            <td>Kreuzprodukt</td>
-            <td><code>cross([1;0;0]; [0;1;0])</code></td>
-            <td>Berechnet das Kreuzprodukt (nur 3D).</td>
-        </tr>
-        <tr>
-            <td>Länge (Betrag)</td>
-            <td><code>len([3; 4])</code></td>
-            <td>Berechnet die Länge des Vektors.</td>
-        </tr>
-    </table>
+		<hr>
 
-    <h2>Gleichungslöser</h2>
-    
-    <h3>Lösen von Gleichungen (nsolve)</h3>
-    <p>Findet exakte oder numerische Lösungen für eine Variable. Findet auch mehrere Lösungen (z. B. bei quadratischen Gleichungen).</p>
-    <p><strong>Syntax:</strong> <code>nsolve(Gleichung)</code></p>
-    <ul>
-        <li><code>nsolve(x^2 - 4 = 0)</code> &rarr; Findet alle Lösungen für x.</li>
-        <li><code>nsolve(x^2 = 4)</code> &rarr; Alternativschreibweise.</li>
-    </ul>
+		<h2>Vektorrechnung</h2>
+		<p>Vektoren werden in eckigen Klammern geschrieben und mit Strichpunkt getrennt: <code>[x; y; z]</code>.</p>
+		<table>
+			<tr>
+				<td>Definition</td>
+				<td><code>[1; 2; 3]</code></td>
+				<td>Erstellt einen Vektor.</td>
+			</tr>
+			<tr>
+				<td>Skalarprodukt</td>
+				<td><code>dot([1; 0]; [0; 1])</code></td>
+				<td>Berechnet das Skalarprodukt (Zahl).</td>
+			</tr>
+			<tr>
+				<td>Kreuzprodukt</td>
+				<td><code>cross([1;0;0]; [0;1;0])</code></td>
+				<td>Berechnet das Kreuzprodukt (nur bei 3D-Vektoren).</td>
+			</tr>
+			<tr>
+				<td>Länge (Betrag)</td>
+				<td><code>len([3; 4])</code></td>
+				<td>Berechnet die Länge des Vektors.</td>
+			</tr>
+		</table>
 
-    <h3>Lineare Gleichungssysteme (lsolve)</h3>
-    <p>Löst ein System aus linearen Gleichungen exakt. Trennen Sie Gleichungen mit einem Strichpunkt.</p>
-    <p><strong>Syntax:</strong> <code>lsolve(Gl1; Gl2; ...)</code></p>
-    <ul>
-        <li>Beispiel: <code>lsolve(x + y = 5; x - y = 1)</code></li>
-    </ul>
+		<h2>Gleichungslöser</h2>
+		
+		<h3>Lösen von Gleichungen (nsolve)</h3>
+		<p>Findet exakte oder numerische Lösungen für eine Variable. Findet auch mehrere Lösungen (z. B. bei quadratischen Gleichungen).</p>
+		<p><strong>Syntax:</strong> <code>nsolve(Gleichung)</code></p>
+		<ul>
+			<li><code>nsolve(x^2 - 4 = 0)</code> &rarr; Findet alle Lösungen für x.</li>
+			<li><code>nsolve(x^2 = 4)</code> &rarr; Alternativschreibweise.</li>
+		</ul>
 
+		<h3>Lineare Gleichungssysteme (lsolve)</h3>
+		<p>Löst ein System aus linearen Gleichungen exakt. Trennen Sie Gleichungen mit einem Strichpunkt.</p>
+		<p><strong>Syntax:</strong> <code>lsolve(Gl1; Gl2; ...)</code></p>
+		<ul>
+			<li>Beispiel: <code>lsolve(x + y = 5; x - y = 1)</code></li>
+		</ul>
+		
+		<h2>Eigene Funktionen</h2>
+		<p>Sie können eigene Funktionen definieren, anzeigen und löschen.</p>
+		<ul>
+			<li><strong>Definieren:</strong> <code>def f(x): x^2 + 2</code> (Danach können Sie <code>f(3)</code> rechnen)</li>
+			<li><strong>Anzeigen:</strong> <code>showdef</code> (Listet alle gespeicherten Funktionen auf)</li>
+			<li><strong>Löschen:</strong> <code>deldef f</code> (Löscht 'f') oder <code>deldef</code> (Löscht alle)</li>
+		</ul>
+	</div>
+
+	<div id="content-en" class="lang-content">
+		<h1>Calculator Manual</h1>
+		<p>Welcome to the help section. This calculator supports mathematical expressions, calculus, statistics, vector calculations, and equation solving.</p>
+
+		<div class="note">
+			<strong>Input:</strong> You can enter decimals using a dot (<code>3.14</code>) or a comma (<code>3,14</code>). For functions with multiple arguments, separate them with a <strong>semicolon (<code>;</code>)</strong> (e.g., <code>min(1; 5)</code>).
+		</div>
+
+		<h2>Basic Arithmetic & Constants</h2>
+		<table>
+			<tr>
+				<th>Function</th>
+				<th>Example Input</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Basic Arithmetic</td>
+				<td><code>12 + 5 * (3 - 1)</code></td>
+				<td>Standard order of operations.</td>
+			</tr>
+			<tr>
+				<td>Power</td>
+				<td><code>2^3</code> or <code>2**3</code></td>
+				<td>Two to the power of three.</td>
+			</tr>
+			<tr>
+				<td>Square Root</td>
+				<td><code>sqrt(16)</code></td>
+				<td>Square root.</td>
+			</tr>
+			<tr>
+				<td>n-th Root</td>
+				<td><code>root(27; 3)</code></td>
+				<td>The 3rd root of 27. (Syntax: <code>root(Number; Degree)</code>)</td>
+			</tr>
+			<tr>
+				<td>Logarithm</td>
+				<td><code>ln(e)</code>, <code>lg(100)</code>, <code>log(8; 2)</code></td>
+				<td>Natural (ln), base-10 (lg), or custom base logarithm (log(Number; Base)).</td>
+			</tr>
+			<tr>
+				<td>Constants</td>
+				<td><code>pi</code>, <code>e</code></td>
+				<td>Pi and Euler's number.</td>
+			</tr>
+		</table>
+
+		<h2>Calculus (Derivatives)</h2>
+		<p>Functions for calculating derivatives.</p>
+		<table>
+			<tr>
+				<th>Command</th>
+				<th>Example Input</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><code>nderive</code></td>
+				<td><code>nderive(x^2; 2; 1)</code></td>
+				<td>Calculates the <strong>numerical value</strong> of the derivative at a point.<br>Syntax: <code>nderive(Function; Point; Degree)</code>.<br>Example: 1st derivative of x² at x=2 is 4.</td>
+			</tr>
+			<tr>
+				<td><code>algs</code></td>
+				<td><code>algs(3x^3; 1)</code></td>
+				<td>Returns the <strong>symbolic derivative</strong> function.<br>Syntax: <code>algs(Function; Degree)</code>.<br>Example: 1st derivative of 3x³ is 9x².</td>
+			</tr>
+		</table>
+
+		<h2>Trigonometry</h2>
+		<p>The angle mode (Degrees or Radians) can be changed in the <strong>Settings</strong>.</p>
+		<table>
+			<tr>
+				<th>Command</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code></td>
+				<td>Sine, Cosine, Tangent.</td>
+			</tr>
+			<tr>
+				<td><code>asin(x)</code>, <code>acos(x)</code>, <code>atan(x)</code></td>
+				<td>Arcsine, Arccosine, Arctangent.</td>
+			</tr>
+			<tr>
+				<td><code>sinh(x)</code>, <code>cosh(x)</code>, <code>tanh(x)</code></td>
+				<td>Hyperbolic functions.</td>
+			</tr>
+		</table>
+		
+		<hr>
+		
+		<h2>📊 Statistics & Combinatorics</h2>
+		<p>All statistical functions can process both single numbers and vectors.</p>
+		<table>
+			<tr>
+				<th>Command</th>
+				<th>Example Input</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td><code>min</code> / <code>max</code></td>
+				<td><code>min(4; 1; 8)</code></td>
+				<td>Returns the smallest or largest value.</td>
+			</tr>
+			<tr>
+				<td><code>mittel</code></td>
+				<td><code>mittel(1; 5; 9)</code></td>
+				<td>Calculates the <strong>arithmetic mean</strong> (average).</td>
+			</tr>
+			<tr>
+				<td><code>sd</code></td>
+				<td><code>sd(3; 6; 8; 12)</code></td>
+				<td>Calculates the <strong>standard deviation</strong> (population).</td>
+			</tr>
+			<tr>
+				<td><code>x!</code></td>
+				<td><code>3!</code></td>
+				<td>Calculates the factorial of a non-negative integer.</td>
+			</tr>
+			<tr>
+				<td><code>binco</code></td>
+				<td><code>binco(5; 2)</code></td>
+				<td>Calculates the binomial coefficient <code>n choose k</code>.</td>
+			</tr>
+			<tr>
+				<td><code>binom</code></td>
+				<td><code>binom(5; 0.5; 2)</code></td>
+				<td>Calculates the binomial distribution <code>P(X = k)</code> with <code>n</code> trials and probability <code>p</code>.</td>
+			</tr>
+			<tr>
+				<td><code>cbinom</code></td>
+				<td><code>cbinom(5; 0.5; 2)</code></td>
+				<td>Calculates the cumulative binomial distribution <code>P(X &lt;= k)</code>.</td>
+			</tr>
+		</table>
+
+		<hr>
+
+		<h2>Vector Calculations</h2>
+		<p>Vectors are written in square brackets and separated by semicolons: <code>[x; y; z]</code>.</p>
+		<table>
+			<tr>
+				<td>Definition</td>
+				<td><code>[1; 2; 3]</code></td>
+				<td>Creates a vector.</td>
+			</tr>
+			<tr>
+				<td>Dot Product</td>
+				<td><code>dot([1; 0]; [0; 1])</code></td>
+				<td>Calculates the dot product (scalar).</td>
+			</tr>
+			<tr>
+				<td>Cross Product</td>
+				<td><code>cross([1;0;0]; [0;1;0])</code></td>
+				<td>Calculates the cross product (3D vectors only).</td>
+			</tr>
+			<tr>
+				<td>Length (Magnitude)</td>
+				<td><code>len([3; 4])</code></td>
+				<td>Calculates the length of the vector.</td>
+			</tr>
+		</table>
+
+		<h2>Equation Solvers</h2>
+		
+		<h3>Solving Equations (nsolve)</h3>
+		<p>Finds exact or numerical solutions for a variable. Can also find multiple solutions (e.g., for quadratic equations).</p>
+		<p><strong>Syntax:</strong> <code>nsolve(Equation)</code></p>
+		<ul>
+			<li><code>nsolve(x^2 - 4 = 0)</code> &rarr; Finds all solutions for x.</li>
+			<li><code>nsolve(x^2 = 4)</code> &rarr; Alternative notation.</li>
+		</ul>
+
+		<h3>Systems of Linear Equations (lsolve)</h3>
+		<p>Solves a system of linear equations exactly. Separate the equations with a semicolon.</p>
+		<p><strong>Syntax:</strong> <code>lsolve(Eq1; Eq2; ...)</code></p>
+		<ul>
+			<li>Example: <code>lsolve(x + y = 5; x - y = 1)</code></li>
+		</ul>
+		
+		<h2>Custom Functions</h2>
+		<p>You can define, display, and delete your own functions.</p>
+		<ul>
+			<li><strong>Define:</strong> <code>def f(x): x^2 + 2</code> (Afterward, you can calculate <code>f(3)</code>)</li>
+			<li><strong>Display:</strong> <code>showdef</code> (Lists all saved functions)</li>
+			<li><strong>Delete:</strong> <code>deldef f</code> (Deletes 'f') or <code>deldef</code> (Deletes all)</li>
+		</ul>
+	</div>
+
+	<script>
+		function switchLang(lang) {
+			// Alle Sprachcontainer verstecken
+			document.querySelectorAll('.lang-content').forEach(function(el) {
+				el.classList.remove('active');
+			});
+			// Ausgewählte Sprache anzeigen
+			document.getElementById('content-' + lang).classList.add('active');
+			// Dokument-Sprache anpassen
+			document.documentElement.lang = lang;
+			// Select-Feld aktualisieren, falls von extern aufgerufen
+			document.getElementById('lang-select').value = lang;
+		}
+		
+		// Automatische Spracherkennung beim Laden der Seite
+		window.onload = function() {
+			var userLang = navigator.language || navigator.userLanguage;
+			var lang = userLang.toLowerCase().startsWith('de') ? 'de' : 'en';
+			switchLang(lang);
+		};
+	</script>
 </body>
 </html>

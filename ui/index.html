@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Mathmax Web - Rechner</title>
+	<title>Mathmax Web</title>
 	<link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
 	<script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 	
@@ -23,7 +23,7 @@
 			border: 2px solid #000000;
 			border-radius: 8px; 
 			width: 100%;
-			max-width: 600px;
+			max-width: 650px;
 		}
 		h1 {
 			margin-top: 0;
@@ -45,7 +45,6 @@
 			box-sizing: border-box; 
 			font-size: 1.1rem; 
 		}
-		/* Deutliche visuelle Hervorhebung beim Navigieren mit der Tastatur */
 		input[type="text"]:focus, select:focus, details:focus-within summary {
 			outline: 3px solid #005fcc;
 			outline-offset: 2px;
@@ -81,6 +80,18 @@
 			clip: rect(0, 0, 0, 0);
 			border: 0;
 		}
+		.help-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 10px;
+			font-size: 0.95rem;
+		}
+		code {
+			background-color: #eee;
+			padding: 2px 4px;
+			border-radius: 3px;
+			font-weight: bold;
+		}
 	</style>
 
 	<py-config type="json">
@@ -96,18 +107,18 @@
 </head>
 <body>
 	<main>
-		<h1>Mathmax Web</h1>
+		<h1 id="ui-title">Mathmax Web</h1>
 		
 		<div id="loading" aria-live="polite">
-			Lade Mathematik-Modul, bitte warten...
+			<span id="ui-loading">Loading Math Module, please wait...</span>
 		</div>
 		
 		<div id="app-content" style="display:none;">
 			
 			<details id="settings-section">
-				<summary>Einstellungen</summary>
+				<summary id="ui-settings">Settings</summary>
 				<div>
-					<label for="decimals">Dezimalstellen:</label>
+					<label for="decimals" id="ui-decimals-lbl">Decimal places:</label>
 					<select id="decimals">
 						<option value="5">5</option>
 						<option value="10" selected>10</option>
@@ -115,39 +126,135 @@
 						<option value="20">20</option>
 					</select>
 					
-					<label for="angle_mode">Winkelmaß:</label>
+					<label for="angle_mode" id="ui-angle-lbl">Angle mode:</label>
 					<select id="angle_mode">
-						<option value="deg" selected>Gradmaß (Deg)</option>
-						<option value="rad">Bogenmaß (Rad)</option>
+						<option value="deg" id="ui-angle-deg" selected>Degrees (Deg)</option>
+						<option value="rad" id="ui-angle-rad">Radians (Rad)</option>
+					</select>
+
+					<label for="lang_override" id="ui-lang-lbl">Language (Display):</label>
+					<select id="lang_override">
+						<option value="auto" id="ui-lang-auto" selected>Auto-detect</option>
+						<option value="en">English</option>
+						<option value="de">Deutsch</option>
 					</select>
 				</div>
 			</details>
 
 			<details id="help-section">
-				<summary>Hilfe</summary>
-				<div>
-					<p>Geben Sie Ihren mathematischen Ausdruck in das Eingabefeld ein und drücken Sie die Eingabetaste (Enter).</p>
-					<ul>
-						<li>Grundrechenarten: +, -, *, /</li>
-						<li>Gleichungen lösen: nsolve(x^2 - 4 = 0)</li>
-						<li>Gleichungssysteme lösen: lsolve(x + y = 10; x - y = 2)</li>
-						<li>Funktionen definieren: def f(x): x^2 + 2</li>
-						<li>Funktionen anzeigen: showdef</li>
-					</ul>
-				</div>
+				<summary id="ui-help">Help & Functions</summary>
+				<div class="help-grid" id="ui-help-content">
+					</div>
 			</details>
 			
 			<section aria-labelledby="calc-heading">
-				<h2 id="calc-heading" class="sr-only">Berechnung</h2>
+				<h2 id="calc-heading" class="sr-only">Calculator</h2>
 				
-				<label for="calc-input">Eingabe (Mit Enter bestätigen):</label>
+				<label for="calc-input" id="ui-input-lbl">Input (Press Enter to calculate):</label>
 				<input type="text" id="calc-input" autocomplete="off">
 				
-				<label for="calc-output">Ergebnis:</label>
+				<label for="calc-output" id="ui-output-lbl">Result:</label>
 				<input type="text" id="calc-output" readonly aria-live="polite">
 			</section>
 		</div>
 	</main>
+
+	<script>
+		const i18n = {
+			en: {
+				title: "Mathmax Web",
+				loading: "Loading Math Module, please wait...",
+				settings: "Settings",
+				decimals: "Decimal places:",
+				angle: "Angle mode:",
+				angleDeg: "Degrees (Deg)",
+				angleRad: "Radians (Rad)",
+				langLbl: "Language:",
+				langAuto: "Auto-detect",
+				help: "Help & Functions",
+				input: "Input (Press Enter to calculate):",
+				output: "Result:",
+				helpContent: `
+					<p>Type your mathematical expression and press <b>Enter</b>.</p>
+					<ul>
+						<li><b>Basics:</b> <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>^</code> (Power), <code>!</code> (Factorial)</li>
+						<li><b>Trigonometry:</b> <code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code>, <code>asin(x)</code> (also hyperbolic: <code>sinh</code>...)</li>
+						<li><b>Algebra / Equations:</b> <code>nsolve(x^2 - 4 = 0)</code>, <code>lsolve(x + y = 10; x - y = 2)</code></li>
+						<li><b>Calculus:</b> <code>nderive(x^2; 2; 1)</code> (Function; Point; Order), <code>algs(x^2; 1)</code> (Symbolic derivative)</li>
+						<li><b>Vectors:</b> <code>[1; 2; 3]</code>, <code>cross(v1; v2)</code>, <code>dot(v1; v2)</code>, <code>len(v)</code></li>
+						<li><b>Statistics:</b> <code>min(...)</code>, <code>max(...)</code>, <code>mittel(...)</code> (Mean), <code>sd(...)</code> (Std Dev)</li>
+						<li><b>Combinatorics:</b> <code>binco(n; k)</code>, <code>binom(n; p; k)</code>, <code>cbinom(n; p; k)</code></li>
+						<li><b>Custom Functions:</b> <code>def f(x): x^2 + 2</code>, then use <code>f(3)</code>. Show all: <code>showdef</code>. Delete: <code>deldef f</code> or <code>deldef</code> (all).</li>
+					</ul>`
+			},
+			de: {
+				title: "Mathmax Web",
+				loading: "Lade Mathematik-Modul, bitte warten...",
+				settings: "Einstellungen",
+				decimals: "Dezimalstellen:",
+				angle: "Winkelmaß:",
+				angleDeg: "Gradmaß (Deg)",
+				angleRad: "Bogenmaß (Rad)",
+				langLbl: "Sprache:",
+				langAuto: "Automatisch",
+				help: "Hilfe & Funktionen",
+				input: "Eingabe (Mit Enter bestätigen):",
+				output: "Ergebnis:",
+				helpContent: `
+					<p>Geben Sie Ihren mathematischen Ausdruck ein und drücken Sie <b>Enter</b>.</p>
+					<ul>
+						<li><b>Grundlagen:</b> <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>^</code> (Potenz), <code>!</code> (Fakultät)</li>
+						<li><b>Trigonometrie:</b> <code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code>, <code>asin(x)</code> (auch hyperbolisch: <code>sinh</code>...)</li>
+						<li><b>Algebra / Gleichungen:</b> <code>nsolve(x^2 - 4 = 0)</code>, <code>lsolve(x + y = 10; x - y = 2)</code></li>
+						<li><b>Analysis:</b> <code>nderive(x^2; 2; 1)</code> (Funktion; Stelle; Grad), <code>algs(x^2; 1)</code> (Symbolische Ableitung)</li>
+						<li><b>Vektoren:</b> <code>[1; 2; 3]</code>, <code>cross(v1; v2)</code>, <code>dot(v1; v2)</code>, <code>len(v)</code></li>
+						<li><b>Statistik:</b> <code>min(...)</code>, <code>max(...)</code>, <code>mittel(...)</code>, <code>sd(...)</code> (Standardabw.)</li>
+						<li><b>Kombinatorik:</b> <code>binco(n; k)</code>, <code>binom(n; p; k)</code>, <code>cbinom(n; p; k)</code></li>
+						<li><b>Eigene Funktionen:</b> <code>def f(x): x^2 + 2</code>, danach <code>f(3)</code> nutzen. Anzeigen: <code>showdef</code>. Löschen: <code>deldef f</code> oder <code>deldef</code> (alle).</li>
+					</ul>`
+			}
+		};
+
+		let currentLang = navigator.language.startsWith('de') ? 'de' : 'en';
+
+		function applyLanguage(lang) {
+			const t = i18n[lang];
+			document.documentElement.lang = lang;
+			document.getElementById('ui-title').innerText = t.title;
+			document.getElementById('ui-loading').innerText = t.loading;
+			document.getElementById('ui-settings').innerText = t.settings;
+			document.getElementById('ui-decimals-lbl').innerText = t.decimals;
+			document.getElementById('ui-angle-lbl').innerText = t.angle;
+			document.getElementById('ui-angle-deg').innerText = t.angleDeg;
+			document.getElementById('ui-angle-rad').innerText = t.angleRad;
+			document.getElementById('ui-lang-lbl').innerText = t.langLbl;
+			document.getElementById('ui-lang-auto').innerText = t.langAuto;
+			document.getElementById('ui-help').innerText = t.help;
+			document.getElementById('ui-input-lbl').innerText = t.input;
+			document.getElementById('ui-output-lbl').innerText = t.output;
+			document.getElementById('ui-help-content').innerHTML = t.helpContent;
+		}
+
+		document.getElementById('lang_override').addEventListener('change', (e) => {
+			if (e.target.value === 'auto') {
+				currentLang = navigator.language.startsWith('de') ? 'de' : 'en';
+			} else {
+				currentLang = e.target.value;
+			}
+			applyLanguage(currentLang);
+			
+			// Optional: Trigger PyScript to reload translations by saving to local storage
+			window.localStorage.setItem('mathmax_lang', e.target.value);
+		});
+
+		// Initial load
+		const savedLang = window.localStorage.getItem('mathmax_lang');
+		if (savedLang && savedLang !== 'auto') {
+			currentLang = savedLang;
+			document.getElementById('lang_override').value = savedLang;
+		}
+		applyLanguage(currentLang);
+	</script>
 
 	<script type="py">
 		import traceback
@@ -201,11 +308,19 @@
 					decimals = int(dec_el.value)
 					angle_mode = ang_el.value
 					
+					# Get language directly from JS variable logic via UI dropdown or navigator
+					lang_override = document.getElementById('lang_override').value
+					if lang_override == 'auto':
+						nav_lang = str(window.navigator.language)
+						active_lang = 'de' if nav_lang.startswith('de') else 'en'
+					else:
+						active_lang = lang_override
+					
 					if not ausdruck.strip():
 						return
 						
 					try:
-						ergebnis = calc.evaluiere(ausdruck, decimals=decimals, angle_mode=angle_mode)
+						ergebnis = calc.evaluiere(ausdruck, decimals=decimals, angle_mode=angle_mode, lang=active_lang)
 						output_el.value = str(ergebnis)
 						
 						# Wenn eine Funktion definiert oder gelöscht wurde -> Speichern
@@ -213,19 +328,19 @@
 							save_state()
 							
 					except Exception as ex:
-						output_el.value = f"Fehler: {ex}"
+						err_prefix = "Fehler" if active_lang == 'de' else "Error"
+						output_el.value = f"{err_prefix}: {ex}"
 					
 					# Fokus setzen und Inhalt markieren
 					output_el.focus()
 					output_el.select()
 						
 			input_el.addEventListener("keydown", create_proxy(calculate))
-			
 			input_el.focus()
 			
 		except Exception as e:
-			err_msg = f"Fehler beim Laden:\n{traceback.format_exc()}"
-			document.getElementById("loading").innerText = err_msg
+			err_msg = f"Error during load / Fehler beim Laden:\n{traceback.format_exc()}"
+			document.getElementById("ui-loading").innerText = err_msg
 	</script>
 </body>
 </html>
