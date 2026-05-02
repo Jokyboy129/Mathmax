@@ -1,4 +1,5 @@
 import math
+import cmath
 import re
 import sympy as sp
 import mpmath
@@ -10,7 +11,7 @@ TRANSLATIONS = {
 	'de': {
 		'reserved': "Fehler: Der Name '{name}' ist reserviert.",
 		'def_success': "Funktion erfolgreich definiert",
-		'def_format': "Format-Fehler. Verwende: def f(x): Ausdruck",
+		'def_format': "Format-Fehler. Verwende z.B.: def f(x) = Ausdruck",
 		'def_error': "Fehler bei Definition: {e}",
 		'del_all': "Alle Definitionen gelöscht.",
 		'del_success': "Funktion '{name}' gelöscht.",
@@ -41,7 +42,7 @@ TRANSLATIONS = {
 		'err_syntax': "Syntaxfehler: Bitte überprüfen Sie Klammern und Rechenzeichen.",
 		'err_zero': "Mathematischer Fehler: Division durch Null ist nicht erlaubt.",
 		'err_name': "Fehler: '{name}' ist unbekannt. Tippfehler?",
-		'err_domain': "Wertefehler: Ungültige Eingabe (z.B. Wurzel aus negativer Zahl oder acosh(x<1)).",
+		'err_domain': "Wertefehler: Ungültige Eingabe (z.B. Wurzel aus negativer Zahl ohne komplexe Funktion).",
 		'err_value': "Wertefehler: {msg}",
 		'err_type': "Typfehler: Falscher Datentyp oder falsche Anzahl an Argumenten.",
 		'err_overflow': "Fehler: Das Ergebnis ist zu groß für die Berechnung.",
@@ -50,7 +51,7 @@ TRANSLATIONS = {
 	'en': {
 		'reserved': "Error: The name '{name}' is reserved.",
 		'def_success': "Function successfully defined",
-		'def_format': "Format error. Use: def f(x): expression",
+		'def_format': "Format error. Use e.g.: def f(x) = expression",
 		'def_error': "Error during definition: {e}",
 		'del_all': "All definitions deleted.",
 		'del_success': "Function '{name}' deleted.",
@@ -81,7 +82,7 @@ TRANSLATIONS = {
 		'err_syntax': "Syntax error: Please check brackets and operators.",
 		'err_zero': "Math error: Division by zero is not allowed.",
 		'err_name': "Error: '{name}' is unknown. Typo?",
-		'err_domain': "Value error: Invalid input (e.g. square root of negative number or acosh(x<1)).",
+		'err_domain': "Value error: Invalid input (e.g. square root of negative number without complex function).",
 		'err_value': "Value error: {msg}",
 		'err_type': "Type error: Wrong data type or wrong number of arguments.",
 		'err_overflow': "Error: The result is too large for the calculation.",
@@ -96,7 +97,7 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 	global USER_DEFINITIONS
 	
 	ausdruck = ausdruck.strip()
-	sympy_locals = {'e': sp.E, 'pi': sp.pi, 'exp': sp.exp}
+	sympy_locals = {'e': sp.E, 'pi': sp.pi, 'exp': sp.exp, 'i': sp.I}
 	
 	# -----------------------------
 	# Hilfsfunktion: Formatierung des Ergebnisses
@@ -106,6 +107,37 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 		if isinstance(obj, Vector):
 			elements = [format_result(x) for x in obj.data]
 			return "[" + "; ".join(elements) + "]"
+			
+		# Komplexe Zahlen behandeln
+		if isinstance(obj, complex) or (hasattr(obj, 'is_complex') and obj.is_complex and not obj.is_real):
+			try:
+				c_val = complex(obj)
+				r = round(c_val.real, decimals)
+				i_val = round(c_val.imag, decimals)
+				
+				if abs(r) < 10**(-decimals-2): r = 0.0
+				if abs(i_val) < 10**(-decimals-2): i_val = 0.0
+				
+				if isinstance(r, float) and r.is_integer(): r = int(r)
+				if isinstance(i_val, float) and i_val.is_integer(): i_val = int(i_val)
+				
+				if r == 0 and i_val == 0:
+					num_str = "0"
+				elif r == 0:
+					if i_val == 1: num_str = "i"
+					elif i_val == -1: num_str = "-i"
+					else: num_str = f"{i_val}i"
+				elif i_val == 0:
+					num_str = str(r)
+				else:
+					op = "+" if i_val > 0 else "-"
+					abs_i = abs(i_val)
+					i_str = "i" if abs_i == 1 else f"{abs_i}i"
+					num_str = f"{r} {op} {i_str}"
+					
+				return num_str.replace('.', ',') if lang == 'de' else num_str
+			except:
+				pass
 			
 		# Zahlen (Float/Int)
 		if isinstance(obj, (int, float, sp.Float, sp.Integer, mpmath.mpf)):
@@ -150,9 +182,10 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 		text = re.sub(r'(\))([a-zA-Z(])', r'\1*\2', text)
 		return text
 
-	if ausdruck.startswith("def "):
+	# Befehl: def f(x) = Ausdruck
+	if re.match(r"^def\s+", ausdruck):
 		try:
-			match = re.match(r"^def\s+([a-zA-Z][a-zA-Z0-9]*)\(([a-zA-Z][a-zA-Z0-9]*)\)\s*:\s*(.+)$", ausdruck)
+			match = re.match(r"^def\s+([a-zA-Z][a-zA-Z0-9]*)\(([a-zA-Z][a-zA-Z0-9]*)\)\s*[:=]?\s*(.+)$", ausdruck)
 			if match:
 				name, var, body = match.groups()
 				body = body.replace(',', '.')
@@ -160,8 +193,8 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 				body = body.replace('^', '**')
 
 				forbidden = ['sqrt', 'sin', 'cos', 'tan', 'log', 'ln', 'exp', 'nsolve', 'lsolve', 
-							 'root', 'e', 'pi', 'sinh', 'cosh', 'tanh', 'asinh', 'acosh', 'atanh',
-							 'binco', 'binom', 'cbinom']
+							 'root', 'e', 'pi', 'i', 'sinh', 'cosh', 'tanh', 'asinh', 'acosh', 'atanh',
+							 'binco', 'binom', 'cbinom', 'show', 'del', 'def']
 				if name in forbidden:
 					return _t('reserved', lang, name=name)
 					
@@ -172,13 +205,14 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 		except Exception as e:
 			return _t('def_error', lang, e=str(e))
 
-	if ausdruck.startswith("deldef"):
-		rest = ausdruck[6:].strip()
+	# Befehl: del f(x) oder del
+	if re.match(r"^del(\s|$)", ausdruck):
+		rest = ausdruck[3:].strip()
 		if not rest:
 			USER_DEFINITIONS.clear()
 			return _t('del_all', lang)
 		else:
-			match = re.match(r"^([a-zA-Z][a-zA-Z0-9]*)(\(.*\))?$", rest)
+			match = re.match(r"^([a-zA-Z][a-zA-Z0-9]*)(?:\(.*\))?$", rest)
 			if match:
 				name = match.group(1)
 				if name in USER_DEFINITIONS:
@@ -186,16 +220,31 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 					return _t('del_success', lang, name=name)
 				else:
 					return _t('del_not_found', lang, name=name)
-			return _t('del_error', lang)
+		return _t('del_error', lang)
 
-	if ausdruck == "showdef":
+	# Befehl: show f(x) oder show
+	if re.match(r"^show(\s|$)", ausdruck):
+		rest = ausdruck[4:].strip()
 		if not USER_DEFINITIONS:
 			return _t('show_none', lang)
-		lines = []
-		for name, data in USER_DEFINITIONS.items():
-			pretty_body = data['body'].replace('**', '^')
-			lines.append(f"{name}({data['var']}) = {pretty_body}")
-		return "\n".join(lines)
+		
+		if not rest:
+			lines = []
+			for name, data in USER_DEFINITIONS.items():
+				pretty_body = data['body'].replace('**', '^')
+				lines.append(f"{name}({data['var']}) = {pretty_body}")
+			return "\n".join(lines)
+		else:
+			match = re.match(r"^([a-zA-Z][a-zA-Z0-9]*)(?:\(.*\))?$", rest)
+			if match:
+				name = match.group(1)
+				if name in USER_DEFINITIONS:
+					data = USER_DEFINITIONS[name]
+					pretty_body = data['body'].replace('**', '^')
+					return f"{name}({data['var']}) = {pretty_body}"
+				else:
+					return _t('del_not_found', lang, name=name)
+			return _t('err_syntax', lang)
 
 	# -----------------------------
 	# 1. Vorverarbeitung
@@ -297,7 +346,7 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 		if match_str and '=' in ausdruck.replace(match_str, ''):
 			return _t('err_nsolve_bracket', lang)
 
-	if '=' in ausdruck and not any(op in ausdruck for op in ['==', '!=', '>=', '<=', 'def ', 'nsolve', 'lsolve']):
+	if '=' in ausdruck and not any(op in ausdruck for op in ['==', '!=', '>=', '<=', 'nsolve', 'lsolve']):
 		ausdruck = f"nsolve({ausdruck})"
 
 	ausdruck = re.sub(r"root\(([^;]+);([^)]+)\)", r"(\1 ** (1/(\2)))", ausdruck)
@@ -343,10 +392,14 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 
 			if mode == 'value':
 				if len(parts) < 3: return _t('err_deriv_args', lang)
-				pos_val = float(sp.sympify(parts[1], locals=sympy_locals).evalf())
+				pos_val = complex(sp.sympify(parts[1], locals=sympy_locals).evalf())
+				if abs(pos_val.imag) < 1e-12: pos_val = pos_val.real
 				order = int(parts[2])
 				res = sp.diff(expression, var_symbol, order).subs(var_symbol, pos_val)
-				return str(float(res.evalf()))
+				res_eval = complex(res.evalf())
+				if abs(res_eval.imag) < 1e-12:
+					return str(res_eval.real)
+				return f"({res_eval.real}+{res_eval.imag}j)"
 			elif mode == 'func':
 				if len(parts) < 2: return _t('err_deriv_args2', lang)
 				order = int(parts[1])
@@ -372,7 +425,13 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 	# -----------------------------
 	class Vector:
 		def __init__(self, data):
-			self.data = [float(x) for x in data]
+			def parse_num(v):
+				if isinstance(v, complex): return v
+				try: 
+					f = float(v)
+					return int(f) if f.is_integer() else f
+				except: return complex(v)
+			self.data = [parse_num(x) for x in data]
 		def __repr__(self): return f"Vector({self.data})"
 		def __len__(self): return len(self.data)
 		def __getitem__(self, key): return self.data[key]
@@ -380,11 +439,11 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 		def __sub__(self, o): return Vector([a - b for a, b in zip(self.data, o.data)]) if isinstance(o, Vector) else NotImplemented
 		def __mul__(self, o):
 			if isinstance(o, Vector): return sum(a * b for a, b in zip(self.data, o.data))
-			if isinstance(o, (int, float)): return Vector([x * o for x in self.data])
+			if isinstance(o, (int, float, complex)): return Vector([x * o for x in self.data])
 			return NotImplemented
 		def __rmul__(self, o): return self.__mul__(o)
-		def __truediv__(self, o): return Vector([x / o for x in self.data]) if isinstance(o, (int, float)) else NotImplemented
-		def magnitude(self): return math.sqrt(sum(x**2 for x in self.data))
+		def __truediv__(self, o): return Vector([x / o for x in self.data]) if isinstance(o, (int, float, complex)) else NotImplemented
+		def magnitude(self): return safe_sqrt(sum(abs(x)**2 for x in self.data))
 
 	# -----------------------------
 	# 4. Hilfsfunktionen
@@ -394,7 +453,9 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 		for arg in args:
 			if isinstance(arg, Vector): data.extend(arg.data)
 			elif isinstance(arg, (list, tuple)): data.extend(flatten_args(arg))
-			else: data.append(float(arg))
+			else: 
+				try: data.append(float(arg))
+				except: data.append(complex(arg))
 		return data
 	
 	def stat_min(*args): return min(flatten_args(args)) if args else 0
@@ -406,7 +467,7 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 		d = flatten_args(args)
 		if len(d) < 1: return 0.0
 		mu = sum(d)/len(d)
-		return math.sqrt(sum((x-mu)**2 for x in d)/len(d))
+		return safe_sqrt(sum((x-mu)**2 for x in d)/len(d))
 
 	def require_integer(value, name):
 		try:
@@ -466,7 +527,7 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 
 	def vector_len_func(obj):
 		if isinstance(obj, Vector): return obj.magnitude()
-		if isinstance(obj, list): return math.sqrt(sum(v**2 for v in obj))
+		if isinstance(obj, list): return safe_sqrt(sum(abs(v)**2 for v in obj))
 		try: return len(obj)
 		except: return 0
 
@@ -477,6 +538,11 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 		return Vector([vec1[1]*vec2[2]-vec1[2]*vec2[1], vec1[2]*vec2[0]-vec1[0]*vec2[2], vec1[0]*vec2[1]-vec1[1]*vec2[0]])
 
 	def dot(vec1, vec2): return Vector(vec1) * Vector(vec2)
+	
+	def safe_sqrt(x):
+		if isinstance(x, complex) or x < 0:
+			return cmath.sqrt(x)
+		return math.sqrt(x)
 
 	# -----------------------------
 	# 5. Solver (nsolve, lsolve)
@@ -496,16 +562,23 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 			found_values = []
 			
 			# Numerisch
-			guesses = [0, 1, 10, -10, 100, -100, 0.1, -0.1, 0.5, 50, -50]
+			guesses = [0, 1, 10, -10, 100, -100, 0.1, -0.1, 0.5, 50, -50, 1j, -1j]
 			for guess in guesses:
 				try:
 					sol_num = sp.nsolve(eq, variable, guess)
-					val = float(sol_num)
+					val_c = complex(sol_num)
+					val = val_c.real if abs(val_c.imag) < 1e-12 else val_c
+					
 					is_new = True
 					for existing in found_values:
-						if abs(existing - val) < 1e-6:
-							is_new = False
-							break
+						if isinstance(existing, complex) and isinstance(val, complex):
+							if abs(existing.real - val.real) < 1e-6 and abs(existing.imag - val.imag) < 1e-6:
+								is_new = False
+								break
+						elif type(existing) == type(val):
+							if abs(existing - val) < 1e-6:
+								is_new = False
+								break
 					if is_new: found_values.append(val)
 				except: continue
 
@@ -521,7 +594,8 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 
 						for sol in sol_list:
 							try:
-								val = float(sol.evalf())
+								val_c = complex(sol.evalf())
+								val = val_c.real if abs(val_c.imag) < 1e-12 else val_c
 								found_values.append(val)
 							except: pass
 				except: pass
@@ -530,12 +604,17 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 
 			# Formatierung via format_result (manuell hier, da nsolve String zurückgibt)
 			formatted = []
-			found_values.sort()
+			found_values.sort(key=lambda x: (x.real, getattr(x, 'imag', 0)))
 			seen_final = set()
 			
 			for val in found_values:
-				if abs(val) < 10**(-decimals-2): val_chk = 0.0
-				else: val_chk = round(val, decimals)
+				if isinstance(val, complex):
+					r = round(val.real, decimals)
+					i_val = round(val.imag, decimals)
+					val_chk = complex(r, i_val)
+				else:
+					if abs(val) < 10**(-decimals-2): val_chk = 0.0
+					else: val_chk = round(val, decimals)
 				
 				if val_chk in seen_final: continue
 				seen_final.add(val_chk)
@@ -569,7 +648,11 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 			sol_tuple = list(sol)[0]
 			res = []
 			for v, val in zip(vars_list, sol_tuple):
-				val_f = float(val.evalf())
+				try:
+					val_c = complex(val.evalf())
+					val_f = val_c.real if abs(val_c.imag) < 1e-12 else val_c
+				except:
+					val_f = float(val.evalf())
 				res.append(f"{v}={format_result(val_f)}")
 			return "; ".join(res)
 		except Exception as e:
@@ -587,18 +670,18 @@ def evaluiere(ausdruck: str, decimals: int = 10, angle_mode: str = 'deg', lang: 
 		ausdruck = ausdruck.replace(match_str, f'__lsolve_calc("{content}")')
 
 	erlaubte_namen = {
-		"sqrt": math.sqrt, "pi": math.pi, "e": math.e,
-		"sin": lambda x: math.sin(to_rad(x)),
-		"cos": lambda x: math.cos(to_rad(x)),
-		"tan": lambda x: math.tan(to_rad(x)),
-		"asin": lambda x: from_rad(math.asin(x)),
-		"acos": lambda x: from_rad(math.acos(x)),
-		"atan": lambda x: from_rad(math.atan(x)),
+		"sqrt": safe_sqrt, "pi": math.pi, "e": math.e, "i": 1j,
+		"sin": lambda x: cmath.sin(to_rad(x)) if isinstance(x, complex) else math.sin(to_rad(x)),
+		"cos": lambda x: cmath.cos(to_rad(x)) if isinstance(x, complex) else math.cos(to_rad(x)),
+		"tan": lambda x: cmath.tan(to_rad(x)) if isinstance(x, complex) else math.tan(to_rad(x)),
+		"asin": lambda x: from_rad(cmath.asin(x)) if isinstance(x, complex) else from_rad(math.asin(x)),
+		"acos": lambda x: from_rad(cmath.acos(x)) if isinstance(x, complex) else from_rad(math.acos(x)),
+		"atan": lambda x: from_rad(cmath.atan(x)) if isinstance(x, complex) else from_rad(math.atan(x)),
 		# Hyperbolische Funktionen
-		"sinh": math.sinh, "cosh": math.cosh, "tanh": math.tanh,
-		"asinh": math.asinh, "acosh": math.acosh, "atanh": math.atanh,
+		"sinh": cmath.sinh, "cosh": cmath.cosh, "tanh": cmath.tanh,
+		"asinh": cmath.asinh, "acosh": cmath.acosh, "atanh": cmath.atanh,
 		
-		"ln": math.log, "lg": math.log10, "log": math.log,
+		"ln": cmath.log, "lg": lambda x: cmath.log(x, 10), "log": cmath.log,
 		"__nsolve_calc": nsolve, "__lsolve_calc": lsolve,
 		"nsolve": nsolve, "lsolve": lsolve,
 		"factorial_strict": factorial_strict,

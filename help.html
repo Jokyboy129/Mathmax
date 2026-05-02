@@ -82,7 +82,7 @@
 <body>
 
 	<div class="lang-switcher">
-		<label for="lang-select">🌐 Language / Sprache: </label>
+		<label for="lang-select">Language / Sprache: </label>
 		<select id="lang-select" onchange="switchLang(this.value)">
 			<option value="en">English</option>
 			<option value="de">Deutsch</option>
@@ -91,7 +91,7 @@
 
 	<div id="content-de" class="lang-content">
 		<h1>Rechner Handbuch</h1>
-		<p>Willkommen zur Hilfe. Dieser Rechner unterstützt mathematische Ausdrücke, Analysis, Statistik, Vektorrechnung und das Lösen von Gleichungen.</p>
+		<p>Willkommen zur Hilfe. Dieser Rechner unterstützt mathematische Ausdrücke, komplexe Zahlen, Analysis, Statistik, Vektorrechnung und das Lösen von Gleichungen.</p>
 
 		<div class="note">
 			<strong>Eingabe:</strong> Sie können Dezimalzahlen sowohl mit Punkt (<code>3.14</code>) als auch mit Komma (<code>3,14</code>) eingeben. Bei Funktionen werden Argumente mit <strong>Semikolon (<code>;</code>)</strong> getrennt (z.B. <code>min(1; 5)</code>).
@@ -108,6 +108,11 @@
 				<td>Grundrechnung</td>
 				<td><code>12 + 5 * (3 - 1)</code></td>
 				<td>Klassische Punkt-vor-Strich-Rechnung.</td>
+			</tr>
+			<tr>
+				<td>Komplexe Zahlen</td>
+				<td><code>2 + 3i</code>, <code>sqrt(-4)</code></td>
+				<td>Rechnen mit imaginären Zahlen.</td>
 			</tr>
 			<tr>
 				<td>Potenz</td>
@@ -131,8 +136,8 @@
 			</tr>
 			<tr>
 				<td>Konstanten</td>
-				<td><code>pi</code>, <code>e</code></td>
-				<td>Kreiszahl Pi und Eulersche Zahl.</td>
+				<td><code>pi</code>, <code>e</code>, <code>i</code></td>
+				<td>Kreiszahl Pi, Eulersche Zahl und imaginäre Einheit.</td>
 			</tr>
 		</table>
 
@@ -179,7 +184,7 @@
 		
 		<hr>
 		
-		<h2>📊 Statistik & Kombinatorik</h2>
+		<h2>Statistik & Kombinatorik</h2>
 		<p>Alle statistischen Funktionen können sowohl einzelne Zahlen als auch Vektoren verarbeiten.</p>
 		<table>
 			<tr>
@@ -271,15 +276,15 @@
 		<h2>Eigene Funktionen</h2>
 		<p>Sie können eigene Funktionen definieren, anzeigen und löschen.</p>
 		<ul>
-			<li><strong>Definieren:</strong> <code>def f(x): x^2 + 2</code> (Danach können Sie <code>f(3)</code> rechnen)</li>
-			<li><strong>Anzeigen:</strong> <code>showdef</code> (Listet alle gespeicherten Funktionen auf)</li>
-			<li><strong>Löschen:</strong> <code>deldef f</code> (Löscht 'f') oder <code>deldef</code> (Löscht alle)</li>
+			<li><strong>Definieren:</strong> <code>def f(x) = x^2 + 2</code> (Danach können Sie <code>f(3)</code> rechnen)</li>
+			<li><strong>Anzeigen:</strong> <code>show f(x)</code> (Zeigt 'f') oder <code>show</code> (Listet alle gespeicherten Funktionen auf)</li>
+			<li><strong>Löschen:</strong> <code>del f(x)</code> (Löscht 'f') oder <code>del</code> (Löscht alle)</li>
 		</ul>
 	</div>
 
 	<div id="content-en" class="lang-content">
 		<h1>Calculator Manual</h1>
-		<p>Welcome to the help section. This calculator supports mathematical expressions, calculus, statistics, vector calculations, and equation solving.</p>
+		<p>Welcome to the help section. This calculator supports mathematical expressions, complex numbers, calculus, statistics, vector calculations, and equation solving.</p>
 
 		<div class="note">
 			<strong>Input:</strong> You can enter decimals using a dot (<code>3.14</code>) or a comma (<code>3,14</code>). For functions with multiple arguments, separate them with a <strong>semicolon (<code>;</code>)</strong> (e.g., <code>min(1; 5)</code>).
@@ -296,6 +301,11 @@
 				<td>Basic Arithmetic</td>
 				<td><code>12 + 5 * (3 - 1)</code></td>
 				<td>Standard order of operations.</td>
+			</tr>
+			<tr>
+				<td>Complex Numbers</td>
+				<td><code>2 + 3i</code>, <code>sqrt(-4)</code></td>
+				<td>Calculations with imaginary numbers.</td>
 			</tr>
 			<tr>
 				<td>Power</td>
@@ -319,8 +329,8 @@
 			</tr>
 			<tr>
 				<td>Constants</td>
-				<td><code>pi</code>, <code>e</code></td>
-				<td>Pi and Euler's number.</td>
+				<td><code>pi</code>, <code>e</code>, <code>i</code></td>
+				<td>Pi, Euler's number, and imaginary unit.</td>
 			</tr>
 		</table>
 
@@ -367,7 +377,7 @@
 		
 		<hr>
 		
-		<h2>📊 Statistics & Combinatorics</h2>
+		<h2>Statistics & Combinatorics</h2>
 		<p>All statistical functions can process both single numbers and vectors.</p>
 		<table>
 			<tr>
@@ -459,9 +469,9 @@
 		<h2>Custom Functions</h2>
 		<p>You can define, display, and delete your own functions.</p>
 		<ul>
-			<li><strong>Define:</strong> <code>def f(x): x^2 + 2</code> (Afterward, you can calculate <code>f(3)</code>)</li>
-			<li><strong>Display:</strong> <code>showdef</code> (Lists all saved functions)</li>
-			<li><strong>Delete:</strong> <code>deldef f</code> (Deletes 'f') or <code>deldef</code> (Deletes all)</li>
+			<li><strong>Define:</strong> <code>def f(x) = x^2 + 2</code> (Afterward, you can calculate <code>f(3)</code>)</li>
+			<li><strong>Display:</strong> <code>show f(x)</code> (Displays 'f') or <code>show</code> (Lists all saved functions)</li>
+			<li><strong>Delete:</strong> <code>del f(x)</code> (Deletes 'f') or <code>del</code> (Deletes all)</li>
 		</ul>
 	</div>
 

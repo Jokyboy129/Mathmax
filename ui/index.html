@@ -63,6 +63,10 @@
 			font-weight: bold;
 			cursor: pointer;
 			padding: 0.5rem;
+			list-style: none; /* Blendet die Dreiecke aus (Standard) */
+		}
+		summary::-webkit-details-marker {
+			display: none; /* Blendet die Dreiecke in Safari/Chrome aus */
 		}
 		#loading { 
 			font-weight: bold; 
@@ -178,13 +182,14 @@
 					<p>Type your mathematical expression and press <b>Enter</b>.</p>
 					<ul>
 						<li><b>Basics:</b> <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>^</code> (Power), <code>!</code> (Factorial)</li>
+						<li><b>Complex Numbers:</b> <code>2+3i</code>, <code>sqrt(-4)</code></li>
 						<li><b>Trigonometry:</b> <code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code>, <code>asin(x)</code> (also hyperbolic: <code>sinh</code>...)</li>
 						<li><b>Algebra / Equations:</b> <code>nsolve(x^2 - 4 = 0)</code>, <code>lsolve(x + y = 10; x - y = 2)</code></li>
 						<li><b>Calculus:</b> <code>nderive(x^2; 2; 1)</code> (Function; Point; Order), <code>algs(x^2; 1)</code> (Symbolic derivative)</li>
 						<li><b>Vectors:</b> <code>[1; 2; 3]</code>, <code>cross(v1; v2)</code>, <code>dot(v1; v2)</code>, <code>len(v)</code></li>
 						<li><b>Statistics:</b> <code>min(...)</code>, <code>max(...)</code>, <code>mittel(...)</code> (Mean), <code>sd(...)</code> (Std Dev)</li>
 						<li><b>Combinatorics:</b> <code>binco(n; k)</code>, <code>binom(n; p; k)</code>, <code>cbinom(n; p; k)</code></li>
-						<li><b>Custom Functions:</b> <code>def f(x): x^2 + 2</code>, then use <code>f(3)</code>. Show all: <code>showdef</code>. Delete: <code>deldef f</code> or <code>deldef</code> (all).</li>
+						<li><b>Custom Functions:</b> <code>def f(x) = x^2 + 2</code>, then use <code>f(3)</code>. Show: <code>show f(x)</code> or <code>show</code> (all). Delete: <code>del f(x)</code> or <code>del</code> (all).</li>
 					</ul>`
 			},
 			de: {
@@ -204,13 +209,14 @@
 					<p>Geben Sie Ihren mathematischen Ausdruck ein und drücken Sie <b>Enter</b>.</p>
 					<ul>
 						<li><b>Grundlagen:</b> <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>^</code> (Potenz), <code>!</code> (Fakultät)</li>
+						<li><b>Komplexe Zahlen:</b> <code>2+3i</code>, <code>sqrt(-4)</code></li>
 						<li><b>Trigonometrie:</b> <code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code>, <code>asin(x)</code> (auch hyperbolisch: <code>sinh</code>...)</li>
 						<li><b>Algebra / Gleichungen:</b> <code>nsolve(x^2 - 4 = 0)</code>, <code>lsolve(x + y = 10; x - y = 2)</code></li>
 						<li><b>Analysis:</b> <code>nderive(x^2; 2; 1)</code> (Funktion; Stelle; Grad), <code>algs(x^2; 1)</code> (Symbolische Ableitung)</li>
 						<li><b>Vektoren:</b> <code>[1; 2; 3]</code>, <code>cross(v1; v2)</code>, <code>dot(v1; v2)</code>, <code>len(v)</code></li>
 						<li><b>Statistik:</b> <code>min(...)</code>, <code>max(...)</code>, <code>mittel(...)</code>, <code>sd(...)</code> (Standardabw.)</li>
 						<li><b>Kombinatorik:</b> <code>binco(n; k)</code>, <code>binom(n; p; k)</code>, <code>cbinom(n; p; k)</code></li>
-						<li><b>Eigene Funktionen:</b> <code>def f(x): x^2 + 2</code>, danach <code>f(3)</code> nutzen. Anzeigen: <code>showdef</code>. Löschen: <code>deldef f</code> oder <code>deldef</code> (alle).</li>
+						<li><b>Eigene Funktionen:</b> <code>def f(x) = x^2 + 2</code>, danach <code>f(3)</code> nutzen. Anzeigen: <code>show f(x)</code> oder <code>show</code> (alle). Löschen: <code>del f(x)</code> oder <code>del</code> (alle).</li>
 					</ul>`
 			}
 		};
@@ -259,6 +265,7 @@
 	<script type="py">
 		import traceback
 		import json
+		import re
 		from pyscript import document, window
 		from pyodide.ffi import create_proxy
 
@@ -324,7 +331,7 @@
 						output_el.value = str(ergebnis)
 						
 						# Wenn eine Funktion definiert oder gelöscht wurde -> Speichern
-						if ausdruck.startswith("def ") or ausdruck.startswith("deldef"):
+						if re.match(r"^(def|del)(\s|$)", ausdruck):
 							save_state()
 							
 					except Exception as ex:
