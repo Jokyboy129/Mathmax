@@ -1,38 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Mathmax Calculator</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mathmax Calculator - Accessible Math</title>
+  
+  <meta name="description" content="Mathmax is an accessible Windows calculator application specifically created for visually impaired and blind users.">
+  <meta name="keywords" content="Mathmax, accessible calculator, screen reader, NVDA, JAWS, blind users, visually impaired, Windows app">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<h1>Mathmax Calculator</h1>
-	<p>Mathmax is an accessible Windows calculator application specifically created for visually impaired and blind users. It provides an intuitive interface for both everyday arithmetic and complex mathematical computations, supporting both English and German languages.</p>
-	
-	<h2>Get Mathmax</h2>
-	<p>You can install the application on your computer or test it directly in your browser:</p>
-	<ul>
-		<li>
-			<a href="https://github.com/jokyboy129/Mathmax/releases">
-				<button>Download Latest Release</button>
-			</a>
-		</li>
-		<li>
-			<a href="https://jokyboy129.github.io/Mathmax/ui">Try the Web Version</a>
-		</li>
-	</ul>
+  <div class="asmr-background" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
 
-	<h2>Key Features</h2>
-	
-	<h3>Standard Arithmetic & Constants</h3>
-	<p>Perform basic calculations including addition, subtraction, multiplication, and division. The app fully supports grouping with parentheses and includes built-in access to mathematical constants like Pi and Euler's number (e). You can also easily calculate powers, standard and general roots, and factorials.</p>
-	
-	<h3>Functions & Equation Solving</h3>
-	<p>Mathmax allows you to create, view, and remove your own custom functions. Furthermore, you can solve equations by specifying an interval (minimum and maximum values) to search for solutions.</p>
-	
-	<h3>Trigonometry & Calculus</h3>
-	<p>Access standard trigonometric calculations (sine, cosine, tangent) and their inverse counterparts. The application also includes calculus tools, allowing you to compute the derivative of a function or find a derivative at a specific coordinate.</p>
-	
-	<h3>Probability & Statistics</h3>
-	<p>Quickly analyze datasets to find minimums, maximums, averages, and standard deviations. For probability tasks, the calculator supports binomial coefficients alongside standard and cumulative binomial distributions.</p>
+  <main>
+    <section class="hero">
+      <h1>Mathmax Calculator</h1>
+      <p>Mathmax is an accessible Windows calculator application specifically created for visually impaired and blind users. It provides an intuitive interface for both everyday arithmetic and complex mathematical computations, supporting both English and German languages.</p>
+    </section>
+
+    <section class="projects-grid">
+      <article class="project-card">
+        <h2>Key Features</h2>
+        <h3>Standard Arithmetic & Constants</h3>
+        <p>Perform basic calculations including addition, subtraction, multiplication, and division. The app fully supports grouping with parentheses and includes built-in access to mathematical constants like Pi and Euler's number (e). You can also easily calculate powers, standard and general roots, and factorials.</p>
+        
+        <h3>Functions & Equation Solving</h3>
+        <p>Mathmax allows you to create, view, and remove your own custom functions. Furthermore, you can solve equations by specifying an interval (minimum and maximum values) to search for solutions.</p>
+        
+        <h3>Trigonometry & Calculus</h3>
+        <p>Access standard trigonometric calculations (sine, cosine, tangent) and their inverse counterparts. The application also includes calculus tools, allowing you to compute the derivative of a function or find a derivative at a specific coordinate.</p>
+        
+        <h3>Probability & Statistics</h3>
+        <p>Quickly analyze datasets to find minimums, maximums, averages, and standard deviations. For probability tasks, the calculator supports binomial coefficients alongside standard and cumulative binomial distributions.</p>
+      </article>
+
+      <article class="project-card">
+        <h2>Get Mathmax</h2>
+        <p>You can install the application on your computer or test it directly in your browser:</p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+          <a href="https://github.com/jokyboy129/Mathmax/releases">Download Latest Release</a>
+          <a href="https://jokyboy129.github.io/Mathmax/ui">Try the Web Version</a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Created by Jokyboy129</p>
+    <div class="footer-links">
+      <a href="https://github.com/Jokyboy129" target="_blank" rel="noopener noreferrer">GitHub Profile</a>
+      <a href="mailto:strasserjakob@icloud.com">strasserjakob@icloud.com</a>
+    </div>
+  </footer>
 </body>
 </html>
